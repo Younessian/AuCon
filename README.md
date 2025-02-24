@@ -1,4 +1,5 @@
-AuCon
+# AuCon
+___
 AuCon is a lightweight Bash utility designed for network reconnaissance and domain resolution. It enables you to quickly resolve domains, process lists of subdomains, and scan CIDR ranges to find live IP addresses—all from the command line.
 
 Features
@@ -10,7 +11,7 @@ Simple Interface: A clear and concise help message guides you through usage.
 Prerequisites
 Bash Shell: AuCon is designed to run on Linux or any Unix-like system.
 nmap: Required for scanning CIDR ranges. Install it using your package manager (e.g., sudo apt-get install nmap).
-Installation
+## Installation
 Clone the Repository:
 bash
 Copy
@@ -27,7 +28,7 @@ bash
 Copy
 Edit
 sudo cp aucon /usr/local/bin/
-Usage
+## Usage
 Display Help
 Show the help message with all available options:
 
@@ -63,9 +64,5 @@ bash
 Copy
 Edit
 aucon -r 192.168.1.0/24
-Patch Notes
-Added CIDR Range Scanning: Introduced the -r option to scan a CIDR range for live IP addresses using nmap.
-Enhanced Help Message: Updated the usage instructions to reflect the new -r option.
-Improved Error Handling: Added checks to ensure necessary arguments are provided for each option.
-Contributing
+## Contributing
 Contributions are welcome! If you have suggestions or improvements, please open an issue or submit a pull request.
