@@ -1,60 +1,85 @@
-# AuCon
-___
-AuCon is a lightweight Bash utility designed for network reconnaissance and domain resolution. It enables you to quickly resolve domains, process lists of subdomains, and scan CIDR ranges to find live IP addresses—all from the command line.
+# AuCon - Automated Subdomain Enumeration & Change Detection
 
-Features
-Domain Resolution: Quickly resolve a single domain's IP address with the -d flag.
-Subdomain Processing: Process a file containing a list of subdomains with the -u option, removing duplicate entries.
-Domains List Processing: Handle a list of domains from a file with the -l option.
-CIDR Range Scanning: Scan a given CIDR range (e.g., 192.168.1.0/24) for live IP addresses using nmap with the -r option.
-Simple Interface: A clear and concise help message guides you through usage.
-Prerequisites
-Bash Shell: AuCon is designed to run on Linux or any Unix-like system.
-nmap: Required for scanning CIDR ranges. Install it using your package manager (e.g., sudo apt-get install nmap).
+## Overview
+AuCon is a shell script (compatible with Bash and Zsh) for automating subdomain enumeration and change detection. It uses `crt.sh` and `subfinder` to gather subdomains and compares results to detect new findings.
+
+## Features
+- Reads target domains from `targets.txt` or command-line arguments.
+- Enumerates subdomains using `crt.sh` and `subfinder`.
+- Stores results and detects new subdomains compared to previous scans.
+- Saves historical results for tracking changes over time.
+
+## Requirements
+- `curl`
+- `jq`
+- `subfinder`
+
 ## Installation
-Clone the Repository:
+Ensure you have the required dependencies installed:
+
+```sh
+sudo apt update && sudo apt install -y curl jq
+```
+
+Install `subfinder`:
+
+```sh
+go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+```
+
+Clone the repository and make the script executable:
+
 ```sh
 git clone https://github.com/Younessian/AuCon.git
 cd AuCon
+chmod +x aucon.sh
 ```
-Make the Script Executable:
+
+For easier usage, you can copy the script to `/usr/local/bin/` to make it globally accessible:
+
 ```sh
-chmod +x aucon
+sudo cp aucon.sh /usr/local/bin/aucon
 ```
-Making AuCon Globally Accessible:
+
+Now you can run it from anywhere:
+
 ```sh
-sudo cp aucon /usr/local/bin/
+aucon example.com
 ```
+
 ## Usage
-Display Help
-Show the help message with all available options:
+### Running the script
+#### Using a target file:
+Create a `targets.txt` file with target domains (one per line):
 
 ```sh
-aucon -h
+echo "example.com" > targets.txt
+aucon
 ```
-Resolve a Single Domain
-Resolve the IP address for a given domain:
 
+#### Providing targets via command line:
 ```sh
-aucon -d example.com
+aucon example.com anotherdomain.com
 ```
-Process a List of Subdomains
-Read subdomains from a file and resolve their IP addresses (duplicates are removed):
 
-```sh
-aucon -u domains.txt
-```
-Process a List of Domains
-Read and resolve IP addresses for a list of domains from a file:
+## How It Works
+1. The script checks for `targets.txt` or uses command-line arguments.
+2. It performs subdomain enumeration using:
+   - `crt.sh` for certificate transparency logs.
+   - `subfinder` for comprehensive enumeration.
+3. Results are processed and stored in `Subdomains`.
+4. Previous results are compared to detect new subdomains.
+5. Changes are logged in `Fresh` and `Today` files.
 
-```sh
-aucon -l domains_list.txt
-```
-Scan a CIDR Range for Live IP Addresses
-Scan a CIDR range to find live hosts:
+## Output Files
+- `Subdomains`: Contains unique subdomains found.
+- `Fresh`: Contains all newly discovered subdomains since the last scan.
+- `Today`: Contains only the subdomains discovered in the most recent scan.
+- `previous_results/`: Stores past results for tracking.
 
-```sh
-aucon -r 192.168.1.0/24
-```
-## Contributing
-Contributions are welcome! If you have suggestions or improvements, please open an issue or submit a pull request.
+## Cleanup
+Temporary files are deleted automatically after execution.
+
+---
+Enjoy automated subdomain enumeration and tracking with AuCon! 🚀
+
