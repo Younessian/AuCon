@@ -1,0 +1,82 @@
+#!/bin/zsh
+
+if [ "$#" -eq 0 ]; then
+  if [ ! -f targets.txt ]; then
+    echo "Error: No arguments provided and targets.txt not found."
+    exit 1
+  fi
+  echo "AutoRecon Up And Running."
+  echo "Reading targets from targets.txt."
+  targets=$(cat targets.txt)
+else
+  for i in "$@"; do
+    targets=$i"\n"$targets
+  done
+  echo -n "$targets" > targets.txt
+fi
+
+echo "Ensure target is set."
+
+echo -n "$targets" > targets.txt
+
+echo "Subdomain Enumeration Phase."
+
+targets=($(<targets.txt))
+echo "Subdomain Enumeration; CRT.SH Phase."
+for line in "${targets[@]}"; do
+  echo "CRT.SH $line."
+  curl -s "https://crt.sh/?q=$line&output=json" >> crt.tmp
+done
+
+echo "Subdomain Enumeration; Subfinder Phase."
+
+subfinder -dL targets.txt -all -silent > subfinder.tmp
+
+echo "Processing..."
+
+cat crt.tmp | jq -r '.[] | "\(.name_value)\n\(.common_name)"' >> Subdomains.tmp
+
+cat subfinder.tmp >> Subdomains.tmp
+sort -u Subdomains.tmp > Subdomains
+
+echo "Detecting Changes..."
+
+
+mkdir -p previous_results
+
+new_file="previous_results/subdomains.tmp"
+
+
+cat previous_results/* | sort -u > previous_results/subs.tmp
+mv previous_results/subs.tmp previous_results/Subs-alltime
+rm -rf previous_results/*.tmp
+latest_file="previous_results/Subs-alltime"
+
+echo "latest_file: '$latest_file'"
+
+if [ ! -s "$latest_file" ]; then
+  echo "No previous results found. Saving current results."
+  cp Subdomains "$new_file"
+else
+  echo "Comparing with the latest results in '$latest_file'"
+  if [ -f "Subdomains" ]; then
+    if diff "$latest_file" Subdomains > /dev/null; then
+      echo "No changes found."
+    else
+      echo "Changes detected."
+    
+      echo "New subdomains found:"
+      comm -13 <(sort "$latest_file") <(sort Subdomains) | tee -a Fresh
+      comm -13 <(sort "$latest_file") <(sort Subdomains) | tee Today
+      echo "Saving current results as $new_file"
+      cp Subdomains "$new_file"
+    fi
+  else
+    echo "'Subdomains' file does not exist."
+    echo "Saving current results as $new_file"
+    cp Subdomains "$new_file"
+  fi
+fi
+
+rm -rf *.tmp
+echo "Done."
