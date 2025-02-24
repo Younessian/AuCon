@@ -13,56 +13,48 @@ Bash Shell: AuCon is designed to run on Linux or any Unix-like system.
 nmap: Required for scanning CIDR ranges. Install it using your package manager (e.g., sudo apt-get install nmap).
 ## Installation
 Clone the Repository:
-bash
-Copy
-Edit
+```sh
 git clone https://github.com/Younessian/AuCon.git
 cd AuCon
+```
 Make the Script Executable:
-bash
-Copy
-Edit
+```sh
 chmod +x aucon
+```
 Making AuCon Globally Accessible:
-bash
-Copy
-Edit
+```sh
 sudo cp aucon /usr/local/bin/
+```
 ## Usage
 Display Help
 Show the help message with all available options:
 
-bash
-Copy
-Edit
+```sh
 aucon -h
+```
 Resolve a Single Domain
 Resolve the IP address for a given domain:
 
-bash
-Copy
-Edit
+```sh
 aucon -d example.com
+```
 Process a List of Subdomains
 Read subdomains from a file and resolve their IP addresses (duplicates are removed):
 
-bash
-Copy
-Edit
+```sh
 aucon -u domains.txt
+```
 Process a List of Domains
 Read and resolve IP addresses for a list of domains from a file:
 
-bash
-Copy
-Edit
+```sh
 aucon -l domains_list.txt
+```
 Scan a CIDR Range for Live IP Addresses
 Scan a CIDR range to find live hosts:
 
-bash
-Copy
-Edit
+```sh
 aucon -r 192.168.1.0/24
+```
 ## Contributing
 Contributions are welcome! If you have suggestions or improvements, please open an issue or submit a pull request.
