@@ -2,6 +2,9 @@
 
 ## Overview
 AuCon is a shell script (compatible with Bash and Zsh) for automating subdomain enumeration and change detection. It uses `crt.sh` and `subfinder` to gather subdomains and compares results to detect new findings.
+You can 
+
+For monitoring the status and detecting changes in your discovered subdomains, you can use [Statix](https://github.com/Yunessian/Statix) alongside AuCon.
 
 ## Features
 - Reads target domains from `targets.txt` or command-line arguments.
