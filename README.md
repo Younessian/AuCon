@@ -30,7 +30,7 @@ go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
 Clone the repository and make the script executable:
 
 ```sh
-git clone https://github.com/Younessian/AuCon.git
+git clone https://github.com/Yunessian/AuCon.git
 cd AuCon
 chmod +x aucon.sh
 ```
